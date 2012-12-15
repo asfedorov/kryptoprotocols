@@ -76,17 +76,105 @@ class Composer():
         #     print result
         print result
 
+class Grouping():
+    def __init__(self):
+        self.group_list = []
 
+    def addGroup(self, group):
+        if group not in self.group_list:
+            self.group_list.append(group)
+        else:
+            pass
+
+    def delGroup(self, group):
+        if group in self.group_list:
+            self.group_list.remove(group)
+        else:
+            pass
+
+    def checkGroup(self, group):
+        c_group = group
+        for x_group in self.group_list:
+            if x_group != group:
+                # print x_group, " |> ", c_group, " << ", self.group_list
+
+
+                if c_group.participants.__len__() == x_group.participants.__len__():
+                    pass
+                elif c_group.participants.__len__() > x_group.participants.__len__():
+                    xg_length = x_group.participants.__len__()
+                    xgi = 0
+                    while xgi < xg_length:
+                        if x_group.participants[xgi] not in c_group.participants:
+                            break
+                        else:
+                            xgi = xgi + 1
+
+                    if xgi == xg_length:
+                        self.delGroup(c_group)
+                        return 0
+                elif c_group.participants.__len__() < x_group.participants.__len__():
+                    cg_length = c_group.participants.__len__()
+                    cgi = 0
+                    while cgi < cg_length:
+                        if c_group.participants[cgi] not in x_group.participants:
+                            break
+                        else:
+                            cgi = cgi + 1
+
+                    if cgi == cg_length:
+                        self.delGroup(x_group)
+                        
+
+    def optimize(self):
+        for group in self.group_list:
+            if group in self.group_list:
+                self.checkGroup(group)
 
 A = Participant('A')
 B = Participant('B')
 C = Participant('C')
-my_group = Group([A,B,C])
-Ruler = Sender(1011, my_group)
-Ruler.getPart()
-print A.parts
-print B.parts
-print C.parts
+D = Participant('D')
+E = Participant('E')
+# my_group = Group([A,B,C])
+# Ruler = Sender(1011, my_group)
+# Ruler.getPart()
+# print A.parts
+# print B.parts
+# print C.parts
 
-Nyan = Composer(my_group)
-Nyan.compose()
+# Nyan = Composer(my_group)
+# Nyan.compose()
+
+my_group = Group([A,D])
+m1 = Group([A,C])
+m2 = Group([A,B])
+m3 = Group([D,E,A])
+m4 = Group([D,C,A])
+
+qq = Grouping()
+qq.addGroup(my_group)
+qq.addGroup(m1)
+qq.addGroup(m2)
+qq.addGroup(m3)
+qq.addGroup(m4)
+
+# qq.checkGroup(my_group)
+
+qq.optimize()
+
+print qq.group_list
+
+for group in qq.group_list:
+
+    Ruler = Sender(1011, group)
+    Ruler.getPart()
+    print "A: ", A.parts
+    print "B: ", B.parts
+    print "C: ", C.parts
+    print "D: ", D.parts
+    print "E: ", E.parts
+    
+    Nyan = Composer(my_group)
+    Nyan.compose()
+    print "--------------"
