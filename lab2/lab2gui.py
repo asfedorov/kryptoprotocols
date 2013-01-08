@@ -22,6 +22,7 @@ class MainForm(QtGui.QMainWindow):
         # self.connect(self.ui.listOfParticipants, QtCore.SIGNAL("itemClicked(QListWidgetItem*)"),self.addParticipantToGroup)
 
         self.connect(self.ui.addGroupButton, QtCore.SIGNAL('pressed()'),self.newGroup)
+        self.connect(self.ui.removeGroupButton, QtCore.SIGNAL('pressed()'),self.removeGroup)
 
         self.connect(self.ui.addToGroupButton, QtCore.SIGNAL('pressed()'),self.addParticipantToGroup)
         self.connect(self.ui.removeFromGroupButton, QtCore.SIGNAL('pressed()'),self.removeParticipantFromGroup)
@@ -43,16 +44,31 @@ class MainForm(QtGui.QMainWindow):
     def removeParticipant(self):
     	participantItem = self.ui.listOfParticipants.selectedItems()[0]
     	participant = participantItem.data(32).toPyObject()
+
+        for groupItem in self.ui.listOfGroups.findItems(":"+participant.name, QtCore.Qt.MatchContains):
+            groupName = groupItem.text().replace(":"+participant.name, "")
+            groupItem.setText(groupName) 
+            group = groupItem.data(32).toPyObject()
+            group.removeParticipant(participant)
+
     	self.ui.listOfParticipants.takeItem(self.ui.listOfParticipants.row(participantItem))
 
     def changeParticipantName(self):
     	participantItem = self.ui.listOfParticipants.selectedItems()[0]
     	participant = participantItem.data(32).toPyObject()
+        participantOldName = participant.name
     	participant.name = participantItem.text()
     	participantItem.setData(32, participant)
 
+        for groupItem in self.ui.listOfGroups.findItems(":"+participantOldName, QtCore.Qt.MatchContains):
+            groupName = groupItem.text().replace(":"+participantOldName, ":"+participantItem.text())
+            groupItem.setText(groupName) 
+            
+
+
     def newGroup(self):
-        group = lab2.Group()
+        group = lab2.Group([])
+        group.participants = []
 
         i = 0
         while self.ui.listOfGroups.findItems("group"+str(i), QtCore.Qt.MatchStartsWith).__len__() != 0:
@@ -63,6 +79,10 @@ class MainForm(QtGui.QMainWindow):
         groupItem.setData(32, group)
         groupItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
         self.ui.listOfGroups.addItem(groupItem)
+
+    def removeGroup(self):
+        groupItem = self.ui.listOfGroups.selectedItems()[0]
+        self.ui.listOfParticipants.takeItem(self.ui.listOfParticipants.row(participantItem))
 
     def addParticipantToGroup(self):
         participantItem = self.ui.listOfParticipants.selectedItems()[0]
