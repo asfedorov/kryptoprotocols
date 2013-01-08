@@ -23,9 +23,15 @@ class MainForm(QtGui.QMainWindow):
         self.connect(self.ui.listOfParticipants, QtCore.SIGNAL("itemClicked(QListWidgetItem*)"),self.addParticipantToGroup)
 
     def newParticipant(self):
-    	name = random.randrange(0,10)
+    	# name = random.randrange(0,10)
+
+        i = 0
+        while self.ui.listOfParticipants.findItems("participant"+str(i), QtCore.Qt.MatchExactly).__len__() != 0:
+            i = i+1
+        name = "participant"+str(i)
+        participantCount = self.ui.listOfParticipants.count()
     	participant = lab2.Participant(name)
-    	participantItem = QtGui.QListWidgetItem("participant")
+    	participantItem = QtGui.QListWidgetItem(name)
     	participantItem.setData(32, participant)
     	participantItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
     	self.ui.listOfParticipants.addItem(participantItem)
@@ -51,7 +57,7 @@ class MainForm(QtGui.QMainWindow):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    app.setApplicationName("JustSimpleAudioPlayer")
+    app.setApplicationName("KryptoSystem2013")
     myapp = MainForm()
     myapp.show()
     try:
