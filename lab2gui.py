@@ -113,13 +113,13 @@ class MainForm(QtGui.QMainWindow):
 
         groupList = lab2.Grouping()
         
-        for itemGroup in self.ui.listOfGroups.findItems("group", QtCore.Qt.MatchStartsWith):
+        for groupItem in self.ui.listOfGroups.findItems("group", QtCore.Qt.MatchStartsWith):
             group = groupItem.data(32).toPyObject()
             groupList.addGroup(group)
 
         groupList.optimize()
 
-        for itemGroup in self.ui.listOfGroups.findItems("group", QtCore.Qt.MatchStartsWith):
+        for groupItem in self.ui.listOfGroups.findItems("group", QtCore.Qt.MatchStartsWith):
             group = groupItem.data(32).toPyObject()
             if not group in groupList.group_list:
                 self.ui.listOfGroups.takeItem(self.ui.listOfGroups.row(groupItem))
