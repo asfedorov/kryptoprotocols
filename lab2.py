@@ -18,6 +18,11 @@ class Group():
             g_name = g_name + p_name.name
         self.name = g_name
 
+    def addParticipant(self, participant):
+        if not participant in self.participants:
+            participants.append(participant)
+            self.name = self.name + participant.name
+
 # класс раздающего. при инициализации передаётся секрет и группа
 class Sender():
     def __init__(self, secret, group):
