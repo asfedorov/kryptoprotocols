@@ -20,8 +20,19 @@ class Group():
 
     def addParticipant(self, participant):
         if not participant in self.participants:
-            participants.append(participant)
+            self.participants.append(participant)
             self.name = self.name + participant.name
+            return 1
+        else:
+            return 0
+
+    def removeParticipant(self, participant):
+        if participant in self.participants:
+            self.participants.remove(participant)
+            self.name = self.name.replace(participant.name, "")
+            return 1
+        else:
+            return 0
 
 # класс раздающего. при инициализации передаётся секрет и группа
 class Sender():

@@ -18,9 +18,13 @@ class MainForm(QtGui.QMainWindow):
 
         self.connect(self.ui.addParticipantButton, QtCore.SIGNAL('pressed()'),self.newParticipant)
         self.connect(self.ui.removeParticipantButton, QtCore.SIGNAL('pressed()'),self.removeParticipant)
-        self.connect(self.ui.addToGroupButton, QtCore.SIGNAL('pressed()'),self.addParticipantToGroup)
         self.connect(self.ui.listOfParticipants, QtCore.SIGNAL("itemChanged(QListWidgetItem*)"),self.changeParticipantName)
-        self.connect(self.ui.listOfParticipants, QtCore.SIGNAL("itemClicked(QListWidgetItem*)"),self.addParticipantToGroup)
+        # self.connect(self.ui.listOfParticipants, QtCore.SIGNAL("itemClicked(QListWidgetItem*)"),self.addParticipantToGroup)
+
+        self.connect(self.ui.addGroupButton, QtCore.SIGNAL('pressed()'),self.newGroup)
+
+        self.connect(self.ui.addToGroupButton, QtCore.SIGNAL('pressed()'),self.addParticipantToGroup)
+        self.connect(self.ui.removeFromGroupButton, QtCore.SIGNAL('pressed()'),self.removeParticipantFromGroup)
 
     def newParticipant(self):
     	# name = random.randrange(0,10)
@@ -29,7 +33,7 @@ class MainForm(QtGui.QMainWindow):
         while self.ui.listOfParticipants.findItems("participant"+str(i), QtCore.Qt.MatchExactly).__len__() != 0:
             i = i+1
         name = "participant"+str(i)
-        participantCount = self.ui.listOfParticipants.count()
+        
     	participant = lab2.Participant(name)
     	participantItem = QtGui.QListWidgetItem(name)
     	participantItem.setData(32, participant)
@@ -41,19 +45,47 @@ class MainForm(QtGui.QMainWindow):
     	participant = participantItem.data(32).toPyObject()
     	self.ui.listOfParticipants.takeItem(self.ui.listOfParticipants.row(participantItem))
 
-
-    def addParticipantToGroup(self):
-    	participantItem = self.ui.listOfParticipants.selectedItems()[0]
-    	participant = participantItem.data(32).toPyObject()
-    	self.ui.listOfGroups.clear()
-    	# print participant.name
-    	self.ui.listOfGroups.addItem(str(participant.name))
-
     def changeParticipantName(self):
     	participantItem = self.ui.listOfParticipants.selectedItems()[0]
     	participant = participantItem.data(32).toPyObject()
     	participant.name = participantItem.text()
     	participantItem.setData(32, participant)
+
+    def newGroup(self):
+        group = lab2.Group()
+
+        i = 0
+        while self.ui.listOfGroups.findItems("group"+str(i), QtCore.Qt.MatchStartsWith).__len__() != 0:
+            i = i+1
+        name = "group"+str(i)
+
+        groupItem = QtGui.QListWidgetItem(name)
+        groupItem.setData(32, group)
+        groupItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+        self.ui.listOfGroups.addItem(groupItem)
+
+    def addParticipantToGroup(self):
+        participantItem = self.ui.listOfParticipants.selectedItems()[0]
+        groupItem = self.ui.listOfGroups.selectedItems()[0]
+
+        participant = participantItem.data(32).toPyObject()
+        group = groupItem.data(32).toPyObject()
+
+        if not group.addParticipant(participant) == 0:
+            groupName = groupItem.text() + ":" + participant.name
+            groupItem.setText(groupName)
+
+    def removeParticipantFromGroup(self):
+        participantItem = self.ui.listOfParticipants.selectedItems()[0]
+        groupItem = self.ui.listOfGroups.selectedItems()[0]
+
+        participant = participantItem.data(32).toPyObject()
+        group = groupItem.data(32).toPyObject()
+
+        if not group.removeParticipant(participant) == 0:
+            groupName = groupItem.text().replace(":"+participant.name, "")
+            groupItem.setText(groupName)
+
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
