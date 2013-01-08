@@ -27,6 +27,9 @@ class MainForm(QtGui.QMainWindow):
         self.connect(self.ui.addToGroupButton, QtCore.SIGNAL('pressed()'),self.addParticipantToGroup)
         self.connect(self.ui.removeFromGroupButton, QtCore.SIGNAL('pressed()'),self.removeParticipantFromGroup)
 
+        self.connect(self.ui.optimizeButton, QtCore.SIGNAL('pressed()'),self.optimizeGroups)
+        self.connect(self.ui.chooseFileButton, QtCore.SIGNAL('pressed()'),self.openFile)
+
     def newParticipant(self):
     	# name = random.randrange(0,10)
 
@@ -63,7 +66,7 @@ class MainForm(QtGui.QMainWindow):
         for groupItem in self.ui.listOfGroups.findItems(":"+participantOldName, QtCore.Qt.MatchContains):
             groupName = groupItem.text().replace(":"+participantOldName, ":"+participantItem.text())
             groupItem.setText(groupName) 
-            
+
 
 
     def newGroup(self):
@@ -82,7 +85,7 @@ class MainForm(QtGui.QMainWindow):
 
     def removeGroup(self):
         groupItem = self.ui.listOfGroups.selectedItems()[0]
-        self.ui.listOfParticipants.takeItem(self.ui.listOfParticipants.row(participantItem))
+        self.ui.listOfGroups.takeItem(self.ui.listOfGroups.row(groupItem))
 
     def addParticipantToGroup(self):
         participantItem = self.ui.listOfParticipants.selectedItems()[0]
@@ -105,6 +108,32 @@ class MainForm(QtGui.QMainWindow):
         if not group.removeParticipant(participant) == 0:
             groupName = groupItem.text().replace(":"+participant.name, "")
             groupItem.setText(groupName)
+
+    def optimizeGroups(self):
+
+        groupList = lab2.Grouping()
+        
+        for itemGroup in self.ui.listOfGroups.findItems("group", QtCore.Qt.MatchStartsWith):
+            group = groupItem.data(32).toPyObject()
+            groupList.addGroup(group)
+
+        groupList.optimize()
+
+        for itemGroup in self.ui.listOfGroups.findItems("group", QtCore.Qt.MatchStartsWith):
+            group = groupItem.data(32).toPyObject()
+            if not group in groupList.group_list:
+                self.ui.listOfGroups.takeItem(self.ui.listOfGroups.row(groupItem))
+
+
+    def openFile(self):
+        filename = QtGui.QFileDialog.getOpenFileNames(self, 'Open File')
+
+        # for filename in self.filenames:
+        #     self.playlist.append(filename)
+        #     self.ui.playlist.addItem(filename)
+        # self.mediaObject.clearQueue()
+        # if self.ui.checkShuffle.checkState() != 0:
+        #     random.shuffle(self.playlist)
 
 
 if __name__ == "__main__":
