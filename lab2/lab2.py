@@ -131,50 +131,50 @@ class Grouping():
             if group in self.group_list:
                 self.checkGroup(group)
 
-A = Participant('A')
-B = Participant('B')
-C = Participant('C')
-D = Participant('D')
-E = Participant('E')
-# my_group = Group([A,B,C])
-# Ruler = Sender(1011, my_group)
-# Ruler.getPart()
-# print A.parts
-# print B.parts
-# print C.parts
+# A = Participant('A')
+# B = Participant('B')
+# C = Participant('C')
+# D = Participant('D')
+# E = Participant('E')
+# # my_group = Group([A,B,C])
+# # Ruler = Sender(1011, my_group)
+# # Ruler.getPart()
+# # print A.parts
+# # print B.parts
+# # print C.parts
 
-# Nyan = Composer(my_group)
-# Nyan.compose()
+# # Nyan = Composer(my_group)
+# # Nyan.compose()
 
-my_group = Group([A,D])
-m1 = Group([A,C])
-m2 = Group([A,B])
-m3 = Group([D,E,A])
-m4 = Group([D,C,A])
+# my_group = Group([A,D])
+# m1 = Group([A,C])
+# m2 = Group([A,B])
+# m3 = Group([D,E,A])
+# m4 = Group([D,C,A])
 
-qq = Grouping()
-qq.addGroup(my_group)
-qq.addGroup(m1)
-qq.addGroup(m2)
-qq.addGroup(m3)
-qq.addGroup(m4)
+# qq = Grouping()
+# qq.addGroup(my_group)
+# qq.addGroup(m1)
+# qq.addGroup(m2)
+# qq.addGroup(m3)
+# qq.addGroup(m4)
 
-# qq.checkGroup(my_group)
+# # qq.checkGroup(my_group)
 
-qq.optimize()
+# qq.optimize()
 
-print qq.group_list
+# print qq.group_list
 
-for group in qq.group_list:
+# for group in qq.group_list:
 
-    Ruler = Sender(1011, group)
-    Ruler.getPart()
-    print "A: ", A.parts
-    print "B: ", B.parts
-    print "C: ", C.parts
-    print "D: ", D.parts
-    print "E: ", E.parts
+#     Ruler = Sender(1011, group)
+#     Ruler.getPart()
+#     print "A: ", A.parts
+#     print "B: ", B.parts
+#     print "C: ", C.parts
+#     print "D: ", D.parts
+#     print "E: ", E.parts
     
-    Nyan = Composer(my_group)
-    Nyan.compose()
-    print "--------------"
+#     Nyan = Composer(my_group)
+#     Nyan.compose()
+#     print "--------------"
