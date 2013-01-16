@@ -24,17 +24,20 @@ class Player():
                 break
             i = i + 1
 
-        self.D = D 
+        self.D = int(D) 
 
 
     def encryptDeck(self, deck, P):
         newDeck = []
         
         for card in deck:
-            newCard = pow(card, self.C) % P
-            newDeck.append(newCard)
 
+            newCard = pow(card, self.C) % P
+            newDeck.append(int(newCard))
+            print card, " ^ ", self.C, " mod ", P, " = ", newCard
+        
         random.shuffle(newDeck)
+        print newDeck
         return newDeck
 
     def decryptCard(self, card, P):
@@ -43,9 +46,11 @@ class Player():
             self.generateD(P)
 
         newCard = pow(card, self.D) % P
+        print card, " ^ ", self.D, " mod ", P, " = ", newCard
+    
         print "decrypted"
 
-        return newCard
+        return int(newCard)
         
 
 class CardGiver():
@@ -90,6 +95,7 @@ class CardGiver():
         player.cards.append(card)
 
     def round(self):
+        print self.deck
         if self.playerList.__len__() < self.deck.__len__():
             for player in self.playerList:
                 self.giveCardToPlayer(player)
